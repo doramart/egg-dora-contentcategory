@@ -1,6 +1,6 @@
 {
   "name": "egg-dora-contentcategory",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "contentCategory",
   "eggPlugin": {
     "name": "doraContentCategory"
@@ -54,7 +54,7 @@
     "url": "git+https://github.com/doramart/egg-dora-contentcategory.git"
   },
   "bugs": {
-    "url": "https://github.com/doramart/egg/issues"
+    "url": "https://github.com/doramart/egg-dora-contentcategory/issues"
   },
   "homepage": "https://github.com/doramart/egg-dora-contentcategory#readme",
   "author": "doramart",
