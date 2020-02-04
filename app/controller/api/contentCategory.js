@@ -4,6 +4,43 @@ const {
 } = require('../../utils')
 let ContentCategoryController = {
 
+
+    /**
+     * @api {get} /api/contentCategory/getList 获取文档类别列表
+     * @apiDescription 获取文档类别列表
+     * @apiName /contentCategory/getList
+     * @apiGroup ContentCategory
+     * @apiSuccess {json} result
+     * @apiSuccessExample {json} Success-Response:
+     *{
+     *    "status": 200,
+     *    "message": "addContent",
+     *    "server_time": 1548037382973,
+     *    "data": [{
+     *          "_id": "E1lagiaw",
+     *          "name": "NodeJs",
+     *          "keywords": "NodeJs,前端开发，全栈开发，前端开发工程师",
+     *          "comments": "NodeJs相关技术文档、教程",
+     *          "contentTemp": "",
+     *          "state": "1",
+     *          "__v": 0,
+     *          "sortPath": "0,Nycd05pP,E1lagiaw",
+     *          "homePage": "NodeJs",
+     *          "defaultUrl": "front-development/NodeJs",
+     *          "date": "2015-07-05 00:03:15",
+     *          "enable": true,
+     *          "parentId": "Nycd05pP",
+     *          "sortId": 1,
+     *          "type": "1",
+     *          "uid": 0,
+     *          "id": "E1lagiaw"
+     *    },
+     *    ...
+     *    ]
+     *}
+     * @apiSampleRequest http://localhost:8080/api/contentCategory/getList
+     * @apiVersion 1.0.0
+     */
     async list(ctx, app) {
 
         try {
