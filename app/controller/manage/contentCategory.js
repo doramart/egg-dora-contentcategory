@@ -185,8 +185,6 @@ let ContentCategoryController = {
 
             ctx.validate(contentCategoryRule(ctx), formObj);
 
-
-
             await ctx.service.contentCategory.update(ctx, fields._id, formObj);
 
             ctx.helper.renderSuccess(ctx);
@@ -206,8 +204,19 @@ let ContentCategoryController = {
 
         try {
             let targetIds = ctx.query.ids;
-            await ctx.service.contentCategory.removes(ctx, targetIds);
-            ctx.helper.renderSuccess(ctx);
+            let contentCountInCates = await ctx.service.content.count({
+                categories: targetIds
+            })
+
+            if (contentCountInCates > 0) {
+                throw new Error("请先删除该分类下的文章！");
+            } else {
+                // 删除主分类
+                await ctx.service.contentCategory.removes(ctx, targetIds);
+                // 删除子类
+                await ctx.service.contentCategory.removes(ctx, targetIds, 'parentId');
+                ctx.helper.renderSuccess(ctx);
+            }
 
         } catch (err) {
 
