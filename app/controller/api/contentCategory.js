@@ -1,8 +1,10 @@
 const _ = require('lodash');
+const fs = require('fs');
 const {
     siteFunc
 } = require('../../utils')
 let ContentCategoryController = {
+
 
     async list(ctx, app) {
 
@@ -14,11 +16,45 @@ let ContentCategoryController = {
                 enable: true
             };
 
+            // 获取当前默认模板信息
+            let defaultTemp = await ctx.helper.reqJsonData('contentTemplate/getDefaultTempInfo');
+
             let contentCategoryList = await ctx.service.contentCategory.find({
-                isPaging: '0'
+                isPaging: '0',
+                lean: '1'
             }, {
-                query: queryObj
+                query: queryObj,
+                populate: ['contentTemp']
             });
+
+            let removeArr = [];
+
+            for (const item of contentCategoryList) {
+                item.url = `/${item.defaultUrl}___${item._id}`;
+                let cateContentsNum = await ctx.helper.reqJsonData(`content/getContentCountsByCateId?typeId=${item._id}`);
+                if (!_.isEmpty(cateContentsNum) && !_.isEmpty(cateContentsNum[0])) {
+                    item.postCount = cateContentsNum[0].total_sum;
+                }
+                if (!_.isEmpty(item.contentTemp)) {
+                    if (item.parentId != '0' && item.contentTemp.forder) {
+                        let currentPath = `${process.cwd()}/app/view/${defaultTemp.alias}/${item.contentTemp.forder}`;
+                        // console.log('--currentPath--', currentPath)
+                        if (!fs.existsSync(currentPath)) {
+                            removeArr.push(item._id);
+                            removeArr.push(item.parentId);
+                        }
+                    }
+                } else {
+                    removeArr.push(item._id);
+                }
+
+            }
+
+            removeArr = _.uniq(removeArr);
+
+            contentCategoryList = _.remove(contentCategoryList, function (cate) {
+                return removeArr.indexOf(cate._id) >= 0
+            })
 
             ctx.helper.renderSuccess(ctx, {
                 data: contentCategoryList
